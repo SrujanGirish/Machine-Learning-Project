@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+	<head><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	</head>
+	<style type="text/css">
+
+        body {
+            background-image: url("https://mcdn.wallpapersafari.com/medium/53/76/xPo9eI.jpg");
+            background-size: cover;
+            background-position: center;
+            }
+
+        button {
+            width: 120px;
+            padding: 10px;
+            display: block;
+            margin: 20px auto;
+            border: 2px solid #111111;
+            cursor: pointer;
+            background-color: orange;
+            border-radius: 10px;
+        }
+
+        h1 {
+          color: white;
+          font-family: Adobe Gothic Std B, sans-serif;
+        }
+
+        h2 {
+          color: white;
+          font-family: Adobe Gothic Std B, sans-serif;
+        }
+
+        h4 {
+          color: white;
+          font-family: Adobe Gothic Std B, sans-serif;
+        }
+
+        h5 {
+          color: white;
+          font-family: Adobe Gothic Std B, sans-serif;
+        }
+
+        input[type="submit"] {
+          border-radius: 10px;
+          background-color: orange;
+        }
+
+        /*input[type="file"] {
+          display: none;
+        }
+        label[for="file-upload"] {
+          background-color: #4CAF50;
+          color: white;
+          padding: 10px 20px;
+          border-radius: 10px;
+          cursor: pointer;
+        }*/
+
+        #start-camera {
+            margin-top: 50px;
+        }
+
+        #video {
+            display: none;
+            margin: 50px auto 0 auto;
+        }
+
+        #click-photo {
+            display: none;
+        }
+
+        #dataurl-container {
+            display: none;
+        }
+
+        #canvas {
+            display: block;
+            margin: 0 auto 20px auto;
+        }
+
+        #dataurl-header {
+            text-align: center;
+            font-size: 15px;
+        }
+
+        #dataurl {
+            display: block;
+            height: 100px;
+            width: 320px;
+            margin: 10px auto;
+            resize: none;
+            outline: none;
+            border: 1px solid #111111;
+            padding: 5px;
+            font-size: 13px;
+            box-sizing: border-box;
+        }
+
+        </style>
+	<body>
+		<div class="container">
+			<h1>Machine learning based Reverse image search.</h1>
+			<form method="POST" enctype="multipart/form-data">
+				<input type="file" name="query_img"><br>
+				<input type="submit">
+			</form>
+			<h2>Query:</h2>
+			{% if query_path %}
+			<img src="{{  query_path  }}" width="300px">
+			{% endif %}
+			<h2>Results:</h2>
+			{% for scores in scores %}
+			<figure style="float: left; margin-right: 20px; margin-bottom: 20px;">
+				<img src="{{  scores[1]  }}" height="200px">
+				<figcaption>{{   scores[0]  }}</figcaption>
+				<p>{{   scores[3]  }}</p>
+			</figure>
+			{% endfor %}
+		</div>
+	</body>
+</html>
+
+
+
+
+
+
+
+<!-- from 11th line put this
+<h2>Open webcam</h2>
+			<br/>
+			<button id="startBtn" onclick="openCam()">Open cam</button>
+			<br/><br/>
+			<video id="videoCam"></video>
+			<script>
+			function openCam(){
+			let All_mediaDevices = navigator.mediaDevices
+			if(!All_mediaDevices || !All_mediaDevices.getUserMedia){
+			console.log("getUserMedia() not supported.");
+			return;
+			}
+			All_mediaDevices.getUserMedia({audio:true, video:true})
+			.then(function(vidStream){
+			var video = document.getElementById('videoCam');
+			if ("srcObject" in video){
+			video.srcObject = vidStream;
+			} else {
+			video.src = window.URL.createObjectURL(vidStream);
+			}
+			video.onlodedmetadata = function(e){
+			video.play();
+			};
+			})
+			.catch(function(e){
+			console.log(e.name + ": "+e.message);
+			});
+			}
+			</script> -->

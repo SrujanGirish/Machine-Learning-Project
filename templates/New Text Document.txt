@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></head>
+<body>
+<div class="container">
+<h1>Simple image search engine</h1>
+<form method="POST" enctype="multipart/form-data">
+<input type="file" name="query_img"><br>
+<input type="submit">
+
+
+<h2>Open webcam</h2>
+<br/>
+<button id="startBtn" onclick="openCam()">Open cam</button>
+<br/><br/>
+<video id="videoCam"></video>
+<script>
+function openCam(){
+let All_mediaDevices = navigator.mediaDevices
+if(!All_mediaDevices || !All_mediaDevices.getUserMedia){
+console.log("getUserMedia() not supported.");
+return;
+}
+All_mediaDevices.getUserMedia({audio:true, video:true})
+.then(function(vidStream){
+var video = document.getElementById('videoCam');
+if ("srcObject" in video){
+video.srcObject = vidStream;
+} else {
+video.src = window.URL.createObjectURL(vidStream);
+}
+video.onlodedmetadata = function(e){
+video.play();
+};
+})
+.catch(function(e){
+console.log(e.name + ": "+e.message);
+});
+}
+</script>
+</form>
+<h2>Query:</h2>
+{% if query_path %}
+<img src="{{  query_path  }}" width="300px">
+{% endif %}
+<h2>Results:</h2>
+{% for scores in scores %}
+<figure style="float: left; margin-right: 20px; margin-bottom: 20px;">
+<img src="{{  scores[1]  }}" height="200px">
+<figcaption>{{   scores[0]  }}</figcaption>
+</figure>
+{% endfor %}
+</div>
+</body>
+</html>

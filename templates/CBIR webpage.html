@@ -1,0 +1,188 @@
+<!doctype html>
+<html>
+    <head><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <style type="text/css">
+
+        body {
+            background-image: url("https://mcdn.wallpapersafari.com/medium/53/76/xPo9eI.jpg");
+            background-size: cover;
+            background-position: center;
+            }
+
+        button {
+            width: 120px;
+            padding: 10px;
+            display: block;
+            margin: 20px auto;
+            border: 2px solid #111111;
+            cursor: pointer;
+            background-color: orange;
+            border-radius: 10px;
+        }
+
+        h1 {
+          color: white;
+          font-family: Adobe Gothic Std B, sans-serif;
+        }
+
+        h2 {
+          color: white;
+          font-family: Adobe Gothic Std B, sans-serif;
+        }
+
+        h4 {
+          color: white;
+          font-family: Adobe Gothic Std B, sans-serif;
+        }
+
+        h5 {
+          color: white;
+          font-family: Adobe Gothic Std B, sans-serif;
+        }
+
+        input[type="submit"] {
+          border-radius: 10px;
+          background-color: orange;
+        }
+
+        /*input[type="file"] {
+          display: none;
+        }
+        label[for="file-upload"] {
+          background-color: #4CAF50;
+          color: white;
+          padding: 10px 20px;
+          border-radius: 10px;
+          cursor: pointer;
+        }*/
+
+        #start-camera {
+            margin-top: 50px;
+        }
+
+        #video {
+            display: none;
+            margin: 50px auto 0 auto;
+        }
+
+        #click-photo {
+            display: none;
+        }
+
+        #dataurl-container {
+            display: none;
+        }
+
+        #canvas {
+            display: block;
+            margin: 0 auto 20px auto;
+        }
+
+        #dataurl-header {
+            text-align: center;
+            font-size: 15px;
+        }
+
+        #dataurl {
+            display: block;
+            height: 100px;
+            width: 320px;
+            margin: 10px auto;
+            resize: none;
+            outline: none;
+            border: 1px solid #111111;
+            padding: 5px;
+            font-size: 13px;
+            box-sizing: border-box;
+        }
+
+        </style>
+
+    </head>
+    <body>
+        <div class="container">
+            <h1>Machine Learning based RIS Application</h1>
+            <form method="POST" enctype="multipart/form-data">
+                <!-- <input type="file" name="query_img"><br>
+                <input type="submit" > -->
+                <!-- <label for="file-uploded">Select a file:</label> 
+                id="file-uploded"-->
+                <input type="file" name="query_img"  placeholder="Search..."><br>
+                <!-- <input type="text" name="search" placeholder="Search..."> -->
+                <h5><input type="submit" value="Search" ></h5>
+            </form>
+            <h2>Inputed Image:</h2>
+            {% if query_path %}
+            <img src="{{ query_path }}" width="300px">
+            {% endif %}
+            <h2>Description:</h2>
+            {% for score in scores %}
+            <h4>
+            <figure style="float: left; margin-right: 20px; margin-bottom: 20px;">
+                <!-- <img src="{{ score[1] }}" height="200px"> -->
+                <img src="{{  scores[1]  }}" height="200px">
+                
+            </figure>
+            </h4>
+            {% endfor %}
+        </div>
+            <h5><button id="start-camera">Open Camera</button></h5>
+            <video id="video" width="320" height="240" autoplay></video>
+            <button id="click-photo">Click Photo</button>
+                <!-- {% if query_path %}
+                    <img src="dataurl-header" width="300px">
+                {% endif %} -->
+            
+            <div id="dataurl-container">
+                <canvas id="canvas" width="320" height="240"></canvas>
+                <div id="dataurl-header">Image Taken</div>
+                <textarea id="dataurl" ></textarea>
+            </div>
+
+        <script>
+
+            let camera_button = document.querySelector("#start-camera");
+            let video = document.querySelector("#video");
+            let click_button = document.querySelector("#click-photo");
+            let canvas = document.querySelector("#canvas");
+            let dataurl = document.querySelector("#dataurl");
+            let dataurl_container = document.querySelector("#dataurl-container");
+
+
+
+            camera_button.addEventListener('click', async function() {
+                let stream = null;
+
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                }
+                catch(error) {
+                    alert(error.message);
+                    return;
+                }
+
+                video.srcObject = stream;
+
+                video.style.display = 'block';
+                camera_button.style.display = 'none';
+                click_button.style.display = 'block';
+            });
+
+            click_button.addEventListener('click', function() {
+                canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                let image_data_url = canvas.toDataURL('image/jpeg');
+
+                const link = document.createElement('a');
+                link.download = 'photo.png';
+                link.href = image_data_url;
+                link.click();
+                
+                dataurl.value = image_data_url;
+                dataurl_container.style.display = 'block';
+            });
+
+        </script>
+    </body>
+</html>
+
+
